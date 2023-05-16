@@ -1,4 +1,4 @@
-import {Injectable, NotFoundException} from "@nestjs/common";
+import {Injectable} from "@nestjs/common";
 import {PrismaService} from "../db/prisma.service";
 import {Prisma, User} from "@prisma/client";
 
@@ -15,20 +15,13 @@ export class UserService {
     }
 
     async findOne(id: string) {
-        const user = await this.prisma.user.findFirst({
+        const user = await this.prisma.user.findFirstOrThrow({
             where: {
                 id,
             },
         });
 
-        if (user) return user;
-        else throw new NotFoundException(`User does not exist.`);
-    }
-
-    async createUser(data: Prisma.UserCreateInput) {
-        return this.prisma.user.create({
-            data,
-        });
+        return user;
     }
 
     async updateUser(data: Prisma.UserUpdateInput, id: string) {
