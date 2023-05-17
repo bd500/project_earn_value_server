@@ -1,12 +1,9 @@
-import {
-    Injectable,
-    NotFoundException,
-    UnauthorizedException,
-} from "@nestjs/common";
+import {Injectable, UnauthorizedException} from "@nestjs/common";
 import {LoginDto} from "./dtos/login.dto";
 import {PrismaService} from "src/db/prisma.service";
 import {JwtService} from "@nestjs/jwt";
 import {RegisterDto} from "./dtos/register.dto";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
@@ -27,7 +24,8 @@ export class AuthService {
 
         // if (!user) throw new NotFoundException("User not Found");
 
-        if (password !== user.password) {
+        const isValidPass = await bcrypt.compare(password, user.password);
+        if (!isValidPass) {
             throw new UnauthorizedException();
         }
 
@@ -35,20 +33,24 @@ export class AuthService {
         const result = {
             id: user.id,
             email: user.email,
-            password: user.password,
             projects: user.projects,
             token,
+            isAdmin: user.isAdmin,
+            name: user.name,
         };
 
         return result;
     }
 
     async register(user: RegisterDto) {
+        const salt = await bcrypt.genSalt();
+        const hashPass = await bcrypt.hash(user.password, salt);
+
         return this.prisma.user.create({
             data: {
                 email: user.email,
                 name: user.name,
-                password: user.password,
+                password: hashPass,
                 // isAdmin: true,
             },
         });
