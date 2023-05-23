@@ -7,7 +7,9 @@ export class ProjectService {
     constructor(private prismaService: PrismaService) {}
 
     async getUserProjects(user: any) {
-        return this.prismaService.project.findMany({where: {id: user.id}});
+        return this.prismaService.project.findMany({
+            where: {userId: user.id},
+        });
     }
 
     async getOne(id: string) {

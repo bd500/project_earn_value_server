@@ -26,7 +26,7 @@ model Project {
   userId   String  @db.ObjectId
   tasks    Task[]
   report   Report?
-  status   String  @default("On Going")
+  status   String  @default("Ongoing")
   note     String?
   duration Int     @default(12)
 }
