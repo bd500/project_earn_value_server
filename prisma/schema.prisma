@@ -33,17 +33,17 @@ model Project {
 
 model Report {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  ac        Float   @default(0)
-  pv        Float   @default(0)
-  ev        Float   @default(0)
+  ac        Float[]
+  pv        Float[]
+  ev        Float[]
   project   Project @relation(fields: [projectId], references: [id])
   projectId String  @unique @db.ObjectId
 }
 
 type Task {
-  name      String
-  progress  Int     @default(0)
-  ac        Float   @default(0)
-  pv        Float   @default(0)
-  ev        Float   @default(0)
+  name     String
+  precede  String  @default("--")
+  ac       Float[] @default([0])
+  pv       Float[] @default([0])
+  progress Float[] @default([0])
 }

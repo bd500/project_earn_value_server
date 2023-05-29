@@ -16,7 +16,13 @@ export class ProjectService {
         return this.prismaService.project.findFirstOrThrow({
             where: {id},
             include: {
-                report: true,
+                report: {
+                    select: {
+                        ac: true,
+                        ev: true,
+                        pv: true,
+                    },
+                },
             },
         });
     }
@@ -43,6 +49,18 @@ export class ProjectService {
         return this.prismaService.project.update({
             where: {id},
             data: {...project},
+        });
+    }
+
+    async updateProjectReport(project: Prisma.ProjectUpdateInput, id: string) {
+        return this.prismaService.project.update({
+            where: {id},
+            data: {
+                tasks: project.tasks,
+                report: {
+                    upsert: {create: project.report, update: project.report},
+                },
+            },
         });
     }
 
