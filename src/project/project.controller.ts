@@ -47,6 +47,14 @@ export class ProjectController {
         return this.projectService.updateProjectReport(body, id);
     }
 
+    @Patch("/info/:id")
+    async updateInfo(
+        @Param("id") id: string,
+        @Body() body: Prisma.ProjectUpdateInput
+    ) {
+        return this.projectService.updateProject(body, id);
+    }
+
     @Delete("/:id")
     async delete(@Param("id") id: string) {
         return this.projectService.deleteProject(id);

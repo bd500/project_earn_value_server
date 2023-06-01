@@ -71,6 +71,12 @@ export class ProjectService {
 
         if (!existPro) throw new NotFoundException("Project not found.");
 
+        await this.prismaService.report.deleteMany({
+            where: {
+                projectId: id,
+            },
+        });
+
         return this.prismaService.project.delete({
             where: {id: id},
         });
